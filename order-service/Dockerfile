@@ -12,8 +12,8 @@ COPY order-service/ .
 COPY proto/ /proto/
 
 # Generate the Prisma client during the build
+ENV DATABASE_URL="postgresql://test:test@localhost:5432/test"
 RUN npx prisma generate
-
 EXPOSE 50052
 
 # On container startup, sync the database schema and start the service
