@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service UserService {
+    rpc GetUser (GetUserRequest) returns (UserResponse);
+}
+
+message GetUserRequest {
+    string id = 1;
+}
+
+message Order {
+    string id = 1;
+    string product = 2;
+    int32 quantity = 3;
+}
+
+message UserResponse {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    repeated Order orders = 4;
+}
