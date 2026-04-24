@@ -1,21 +1,42 @@
-import type { NextFunction, Request, Response } from "express";
-import { mapErrorToHttp } from "../error/ErrorMapper";
+import { Request, Response, NextFunction } from "express";
 import { logger } from "../../../shared/logger/logger";
 
 export const errorHandler = (
-  err: unknown,
-  _req: Request,
+  err: any,
+  req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
-  const e = mapErrorToHttp(err);
+  const status = err.httpStatus || 500;
+  const isServerError = status >= 500;
 
-  if (e.status >= 500) {
-    logger.error(err, "Unhandled Server Error:");
+  // Internal error
+  if (isServerError) {
+    logger.error(
+      {
+        err, // full stack
+        method: req.method,
+        url: req.originalUrl,
+        body: req.body,
+        user: (req as any).user?.id,
+      },
+      "Unhandled server error",
+    );
+  } else {
+    logger.warn(
+      {
+        message: err.message,
+        method: req.method,
+        url: req.originalUrl,
+      },
+      "Client error",
+    );
   }
 
-  res.status(e.status).json({
-    message: e.message,
-    code: e.code,
+  // 🧼 CLIENT RESPONSE (SANITIZED)
+  res.status(status).json({
+    success: false,
+    message: isServerError ? "Internal Server Error" : err.message,
+    code: err.code || "UNKNOWN_ERROR",
   });
 };
