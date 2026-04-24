@@ -16,3 +16,13 @@ export const connectDB = async (): Promise<void> => {
     throw error;
   }
 };
+
+export const disconnectDB = async (): Promise<void> => {
+  try {
+    await mongoose.disconnect();
+    logger.info("MongoDB disconnected successfully");
+  } catch (error) {
+    logger.error(error, "MongoDB disconnection error:");
+    throw error;
+  }
+};
