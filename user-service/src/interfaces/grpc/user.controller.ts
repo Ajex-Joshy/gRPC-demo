@@ -1,16 +1,17 @@
 export class UserController {
   constructor(
     private useCase: {
-      execute(
-        userId: string,
-      ): Promise<{
+      execute(userId: string): Promise<{
         user: { id: string; name: string; email: string };
         orders: Array<{ id: string; product: string; quantity: number }>;
       }>;
     },
   ) {}
 
-  GetUser = async (call: any, cb: any) => {
+  GetUser = async (
+    call: { request: { id: string } },
+    cb: (error: unknown, response?: unknown) => void,
+  ) => {
     try {
       const result = await this.useCase.execute(call.request.id);
       cb(null, {
@@ -19,10 +20,10 @@ export class UserController {
         email: result.user.email,
         orders: result.orders,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       cb({
         code: 13,
-        message: error.message,
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   };

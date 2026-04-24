@@ -1,0 +1,236 @@
+src/infrastructure/db/mappers/user.mapper.ts:3:8 lint/complexity/noStaticOnlyClass ━━━━━━━━━━
+
+  ! Avoid classes that contain only static members.
+  
+     1 │ import { User, UserRole } from "../../../domain/entities/user.entity";
+     2 │ 
+   > 3 │ export class UserMapper {
+       │        ^^^^^^^^^^^^^^^^^^
+   > 4 │   static toDomain(data: any): User {
+        ...
+  > 27 │     return role as UserRole;
+  > 28 │   }
+  > 29 │ }
+       │ ^
+    30 │ 
+  
+  i Prefer using simple functions instead of classes with only static members.
+  
+
+src/infrastructure/db/mappers/user.mapper.ts:4:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class UserMapper {
+  > 4 │   static toDomain(data: any): User {
+      │                         ^^^
+    5 │     return new User(
+    6 │       data._id.toString(),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/infrastructure/grpc/order.client.ts:9:57 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     7 │   path.resolve(process.cwd(), "../proto/order.proto"),
+     8 │ );
+   > 9 │ const proto = grpc.loadPackageDefinition(packageDef) as any;
+       │                                                         ^^^
+    10 │ 
+    11 │ export class OrderClient {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/infrastructure/grpc/order.client.ts:23:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    21 │   getOrders(userId: string): Promise<OrderDTO[]> {
+    22 │     return new Promise((resolve, reject) => {
+  > 23 │       this.client.GetOrdersByUser({ userId }, (err: any, res: any) => {
+       │                                                     ^^^
+    24 │         if (err) {
+    25 │           return reject(err);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/infrastructure/grpc/order.client.ts:23:63 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    21 │   getOrders(userId: string): Promise<OrderDTO[]> {
+    22 │     return new Promise((resolve, reject) => {
+  > 23 │       this.client.GetOrdersByUser({ userId }, (err: any, res: any) => {
+       │                                                               ^^^
+    24 │         if (err) {
+    25 │           return reject(err);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/infrastructure/grpc/order.client.ts:32:55 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    30 │         }
+    31 │ 
+  > 32 │         const orders: OrderDTO[] = res.orders.map((o: any) => {
+       │                                                       ^^^
+    33 │           if (!o?.id || !o?.product || o?.quantity == null) {
+    34 │             throw new Error("Invalid order data from OrderService");
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/grpc/user.controller.ts:11:26 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     9 │   ) {}
+    10 │ 
+  > 11 │   GetUser = async (call: any, cb: any) => {
+       │                          ^^^
+    12 │     try {
+    13 │       const result = await this.useCase.execute(call.request.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/grpc/user.controller.ts:11:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     9 │   ) {}
+    10 │ 
+  > 11 │   GetUser = async (call: any, cb: any) => {
+       │                                   ^^^
+    12 │     try {
+    13 │       const result = await this.useCase.execute(call.request.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/grpc/user.controller.ts:20:21 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    18 │         orders: result.orders,
+    19 │       });
+  > 20 │     } catch (error: any) {
+       │                     ^^^
+    21 │       cb({
+    22 │         code: 13,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/http/controllers/auth.controller.ts:71:20 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    69 │   };
+    70 │   // GET /auth/me
+  > 71 │   me = async (req: any, res: Response, next: NextFunction) => {
+       │                    ^^^
+    72 │     try {
+    73 │       const userId = req.user?.userId;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/http/error/ErrorMapper.ts:8:8 lint/complexity/noStaticOnlyClass ━━━━━━━━━━
+
+  ! Avoid classes that contain only static members.
+  
+     6 │ import { HTTP_STATUS } from "../../../shared/constants/http-status.constants";
+     7 │ 
+   > 8 │ export class ErrorMapper {
+       │        ^^^^^^^^^^^^^^^^^^^
+   > 9 │   static toHttp(error: any) {
+        ...
+  > 52 │     };
+  > 53 │   }
+  > 54 │ }
+       │ ^
+    55 │ 
+  
+  i Prefer using simple functions instead of classes with only static members.
+  
+
+src/interfaces/http/error/ErrorMapper.ts:9:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     8 │ export class ErrorMapper {
+   > 9 │   static toHttp(error: any) {
+       │                        ^^^
+    10 │     // DOMAIN
+    11 │     if (error instanceof UserAlreadyExistsException) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/http/middlewares/auth.middlware.ts:24:49 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    23 │     try {
+  > 24 │       const payload = this.jwt.verify(token) as any;
+       │                                                 ^^^
+    25 │       req.user = { userId: payload.userId, role: payload.role };
+    26 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/http/middlewares/error-handler.middleware.ts:5:8 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export const errorHandler = (
+  > 5 │   err: any,
+      │        ^^^
+    6 │   _req: Request,
+    7 │   res: Response,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+src/interfaces/http/middlewares/validation.middleware.ts:5:8 lint/complexity/noStaticOnlyClass ━━━━━━━━━━
+
+  ! Avoid classes that contain only static members.
+  
+     3 │ import { BadRequestException } from "../../../application/exceptions/bad-request.exception";
+     4 │ 
+   > 5 │ export class ValidationMiddleware {
+       │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   > 6 │   static validate<T>(schema: ZodSchema<T>) {
+        ...
+  > 22 │     };
+  > 23 │   }
+  > 24 │ }
+       │ ^
+    25 │ 
+  
+  i Prefer using simple functions instead of classes with only static members.
+  
+
+src/interfaces/http/middlewares/validation.middleware.ts:20:15 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    19 │       // overwrite with parsed/typed data
+  > 20 │       (req as any).body = result.data;
+       │               ^^^
+    21 │       next();
+    22 │     };
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+Checked 41 files in 230ms. No fixes applied.
+Found 16 warnings.

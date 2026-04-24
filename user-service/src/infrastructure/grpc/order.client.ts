@@ -1,17 +1,19 @@
+import path from "node:path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
-import { OrderDTO } from "../../application/dto/order.dto";
-import path from "node:path";
+import type { OrderDTO } from "../../application/dto/order.dto";
+
 const packageDef = protoLoader.loadSync(
   path.resolve(process.cwd(), "../proto/order.proto"),
 );
-const proto = grpc.loadPackageDefinition(packageDef) as any;
+const proto = grpc.loadPackageDefinition(packageDef) as grpc.GrpcObject;
 
 export class OrderClient {
-  private client;
+  private client: unknown;
 
   constructor() {
-    this.client = new proto.OrderService(
+    const Service = proto.OrderService as typeof grpc.Client;
+    this.client = new Service(
       process.env.ORDER_SERVICE_URL ?? "127.0.0.1:50052",
       grpc.credentials.createInsecure(),
     );
@@ -19,28 +21,39 @@ export class OrderClient {
 
   getOrders(userId: string): Promise<OrderDTO[]> {
     return new Promise((resolve, reject) => {
-      this.client.GetOrdersByUser({ userId }, (err: any, res: any) => {
-        if (err) {
-          return reject(err);
-        }
-
-        if (!res || !Array.isArray(res.orders)) {
-          return resolve([]);
-        }
-
-        const orders: OrderDTO[] = res.orders.map((o: any) => {
-          if (!o?.id || !o?.product || o?.quantity == null) {
-            throw new Error("Invalid order data from OrderService");
+      const client = this.client as grpc.Client & {
+        GetOrdersByUser: (arg0: { userId: string }, arg1: (err: grpc.ServiceError | null, res: { orders: unknown[] }) => void) => void
+      };
+      client.GetOrdersByUser(
+        { userId },
+        (err: grpc.ServiceError | null, res: { orders: unknown[] }) => {
+          if (err) {
+            return reject(err);
           }
-          return {
-            id: o.id,
-            product: o.product,
-            quantity: o.quantity,
-          };
-        });
 
-        resolve(orders);
-      });
+          if (!res || !Array.isArray(res.orders)) {
+            return resolve([]);
+          }
+
+          const orders: OrderDTO[] = res.orders.map((o: unknown) => {
+            const orderObj = o as Record<string, unknown>;
+            if (
+              !orderObj?.id ||
+              !orderObj?.product ||
+              orderObj?.quantity == null
+            ) {
+              throw new Error("Invalid order data from OrderService");
+            }
+            return {
+              id: String(orderObj.id),
+              product: String(orderObj.product),
+              quantity: Number(orderObj.quantity),
+            };
+          });
+
+          resolve(orders);
+        },
+      );
     });
   }
 }
