@@ -6,7 +6,7 @@ export class GetOrderByUser {
 	constructor(private repo: IOrderRepository) {}
 
 	async execute(userId: string): Promise<OrderResponseDTO[] | null> {
-		const orders = await this.repo.findOrderByUserId(userId);
+		const orders = await this.repo.findByUserId(userId);
 
 		return OrderMapper.toDTOList(orders);
 	}

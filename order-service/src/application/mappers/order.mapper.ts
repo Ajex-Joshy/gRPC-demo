@@ -5,7 +5,7 @@ export class OrderMapper {
 	static toDTO(order: Order): OrderResponseDTO {
 		return {
 			id: order.id,
-			product: order.product,
+			product: order.item,
 			quantity: order.quantity,
 		};
 	}
