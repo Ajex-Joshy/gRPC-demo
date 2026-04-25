@@ -21,7 +21,7 @@ async function bootstrap() {
 
   const app = express();
   app.use(helmet());
-  app.use(ExpressMongoSanitize({ replaceWith: "-" }));
+  // app.use(ExpressMongoSanitize({ replaceWith: "-" }));
   app.use(httpLogger);
   app.use(express.json());
 
