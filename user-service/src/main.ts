@@ -48,7 +48,7 @@ async function bootstrap() {
       logger.error("Force shutdown due to timeout");
       process.exit(1);
     }, 10000);
-    grpcServer.tryShutdown((err) => {
+    grpcServer.tryShutdown((err: any) => {
       if (err) {
         logger.error(err, "Error shutting down gRPC server");
       } else {

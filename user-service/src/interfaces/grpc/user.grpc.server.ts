@@ -5,16 +5,15 @@ import { ENV } from "@config/env.config";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import type { UserGrpcController } from "@interfaces/grpc/controllers/user.grpc.controller";
-import type { UserProtoGrpcType } from "@interfaces/grpc/types/user.grpc.types";
 import { logger } from "@shared/logger/logger";
 
-const protoPath = path.resolve(__dirname, "../../../../proto/user.proto");
+const protoPath = path.resolve(process.cwd(), "proto/user.proto");
 
 const packageDef = protoLoader.loadSync(protoPath);
 
 const proto = grpc.loadPackageDefinition(
   packageDef,
-) as unknown as UserProtoGrpcType;
+) as any;
 
 const controller = container.get<UserGrpcController>(TYPES.UserGrpcController);
 

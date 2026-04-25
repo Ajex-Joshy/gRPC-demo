@@ -16,6 +16,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 RUN pnpm prisma generate
 
 COPY . .
@@ -41,8 +42,11 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy built artifacts from the builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/proto ./proto
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+# Generate Prisma Client in the production stage to ensure it's placed correctly in node_modules
+RUN npx prisma generate
 
 # Security: Create and run as a non-root user
 RUN addgroup -S ordergroup && adduser -S orderuser -G ordergroup
@@ -50,4 +54,4 @@ USER orderuser
 
 EXPOSE 3001
 
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && node dist/main.js"]

@@ -1,46 +1,40 @@
-import type { GetUserById } from "@application/use-cases/get-user-by-id.use-case";
 import { TYPES } from "@config/di/types";
-import { UserNotFoundException } from "@domain/exceptions/UserNotFound.exception";
-import * as grpc from "@grpc/grpc-js";
-import type {
-  GetUserCall,
-  GetUserCallback,
-} from "@interfaces/grpc/types/user.grpc.types";
-import { BaseException } from "@shared/exceptions/BaseException";
 import { inject, injectable } from "inversify";
+import type { GetUserById } from "@application/use-cases/get-user-by-id.use-case";
+import { UserNotFoundException } from "@domain/exceptions/UserNotFound.exception";
 
 @injectable()
 export class UserGrpcController {
   constructor(@inject(TYPES.GetUserById) private getUserById: GetUserById) {}
 
-  GetUser = async (call: GetUserCall, callback: GetUserCallback) => {
+  GetUser = async (call: any, callback: any) => {
     try {
       const { userId } = call.request;
-
       const user = await this.getUserById.execute(userId);
 
-      if (!user) throw new UserNotFoundException(userId);
+      if (!user) {
+        return callback({
+          code: 5, // NOT_FOUND
+          message: "User not found",
+        });
+      }
 
-      return callback(null, {
-        id: user._id,
-        name: user.name,
+      callback(null, {
+        id: user._id.toString(),
         email: user.email,
         role: user.role,
       });
     } catch (error) {
-      if (error instanceof BaseException && error.isOperational) {
+      if (error instanceof UserNotFoundException) {
         return callback({
-          code: error.grpcStatus,
+          code: 5,
           message: error.message,
-        } as grpc.ServiceError);
+        });
       }
-
-      const message = error instanceof Error ? error.message : "Unknown error";
-
-      return callback({
-        code: grpc.status.INTERNAL,
-        message,
-      } as grpc.ServiceError);
+      callback({
+        code: 13, // INTERNAL
+        message: "Internal server error",
+      });
     }
   };
 }
