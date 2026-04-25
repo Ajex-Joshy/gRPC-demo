@@ -1,5 +1,5 @@
-import { Order } from "../entities/order.entity";
+import type { Order } from "../entities/order.entity";
 
 export interface IOrderRepository {
-  findOrderByUserId(userId: string): Promise<Order[] | null>;
+	findOrderByUserId(userId: string): Promise<Order[] | null>;
 }

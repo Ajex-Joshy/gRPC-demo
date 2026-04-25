@@ -10,6 +10,7 @@ import { AuthMiddleware } from "../../interfaces/http/middlewares/auth.middlware
 import { RoleMiddleware } from "../../interfaces/http/middlewares/role.middleware";
 import { AuthRoutes } from "../../interfaces/http/routes/auth.routes";
 import { TYPES } from "./types";
+import { UserGrpcController } from "../../interfaces/grpc/controllers/user.grpc.controller";
 
 const container = new Container();
 
@@ -32,5 +33,8 @@ container.bind(TYPES.RoleMiddleware).to(RoleMiddleware);
 
 // routes
 container.bind(TYPES.AuthRoutes).to(AuthRoutes);
+
+// gRPC controllers
+container.bind(TYPES.UserGrpcController).to(UserGrpcController);
 
 export { container };

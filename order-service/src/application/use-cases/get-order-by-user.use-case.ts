@@ -3,11 +3,11 @@ import type { OrderResponseDTO } from "../dto/order-response.dto";
 import { OrderMapper } from "../mappers/order.mapper";
 
 export class GetOrderByUser {
-  constructor(private repo: IOrderRepository) {}
+	constructor(private repo: IOrderRepository) {}
 
-  async execute(userId: string): Promise<OrderResponseDTO[] | null> {
-    const orders = await this.repo.findOrderByUserId(userId);
+	async execute(userId: string): Promise<OrderResponseDTO[] | null> {
+		const orders = await this.repo.findOrderByUserId(userId);
 
-    return OrderMapper.toDTOList(orders);
-  }
+		return OrderMapper.toDTOList(orders);
+	}
 }

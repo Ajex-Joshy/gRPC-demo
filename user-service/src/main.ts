@@ -10,9 +10,14 @@ import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import { httpLogger } from "./shared/logger/http.logger";
 import { logger } from "./shared/logger/logger";
+import {
+  startGrpcServer,
+  server as grpcServer,
+} from "./interfaces/grpc/user.grpc.server";
 
 async function bootstrap() {
   await connectDB();
+  await startGrpcServer();
 
   const app = express();
   app.use(helmet());
@@ -31,23 +36,38 @@ async function bootstrap() {
   );
 
   // Graceful Shutdown handler
+  let isShuttingDown = false;
+
   const gracefulShutdown = async (signal: string) => {
+    if (isShuttingDown) return;
+    isShuttingDown = true;
+
     logger.info(`Received ${signal}. Shutting down gracefully...`);
 
-    server.close(async () => {
-      logger.info("HTTP server closed.");
-      await disconnectDB();
-      logger.info("Graceful shutdown complete.");
-      process.exit(0);
-    });
-
-    // Force shutdown if it takes too long
-    setTimeout(() => {
-      logger.error(
-        "Could not close connections in time, forcefully shutting down",
-      );
+    const timeout = setTimeout(() => {
+      logger.error("Force shutdown due to timeout");
       process.exit(1);
     }, 10000);
+    grpcServer.tryShutdown((err) => {
+      if (err) {
+        logger.error(err, "Error shutting down gRPC server");
+      } else {
+        logger.info("gRPC server closed");
+      }
+    });
+    server.close(async () => {
+      try {
+        logger.info("HTTP server closed.");
+        await disconnectDB();
+        logger.info("Graceful shutdown complete.");
+        process.exit(0);
+      } catch (err) {
+        logger.error(err, "Error during shutdown");
+        process.exit(1);
+      } finally {
+        clearTimeout(timeout);
+      }
+    });
   };
 
   process.on("SIGINT", () => gracefulShutdown("SIGINT"));
