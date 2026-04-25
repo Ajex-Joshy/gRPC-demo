@@ -9,7 +9,8 @@
     "start": "node dist/src/main.js",
     "lint": "biome check .",
     "format": "biome format .",
-    "fix": "biome check --apply ."
+    "fix": "biome check --apply .",
+    "generate:proto": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/interfaces/grpc/generated/ proto/*.proto"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "env": "^0.0.2",
     "express": "^5.2.1",
     "express-mongo-sanitize": "^2.2.0",
+    "grpc-health-check": "^2.1.0",
     "helmet": "^8.1.0",
     "inversify": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
