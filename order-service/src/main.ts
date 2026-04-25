@@ -1,9 +1,6 @@
 import path from "node:path";
-import * as grpc from "@grpc/grpc-js";
-import * as protoLoader from "@grpc/proto-loader";
-import { GetOrderByUser } from "./application/use-cases/get-order-by-user.use-case";
-import { PrismaOrderRepository } from "./infrastructure/db/prisma/prisma-order.repository";
-import { OrderController } from "./interfaces/grpc/order.controller";
+import { GetOrderByUser } from "@application/use-cases/get-order-by-user.use-case";
+import { PrismaOrderRepository } from "@infrastructure/db/prisma/prisma-order.repository";
 import "dotenv/config";
 
 class InMemoryOrderRepository {
@@ -13,12 +10,20 @@ class InMemoryOrderRepository {
 		{ id: "o201", userId: "u2", product: "Mechanical Keyboard", quantity: 1 },
 	];
 
-	async findOrderByUserId(userId: string) {
-		return this.orders.filter((order) => order.userId === userId);
+	async findByUserId(userId: string) {
+		return this.orders.filter((order) => order.userId === userId) as any;
+	}
+
+	async create(order: any): Promise<any> {
+		throw new Error("Method not implemented.");
+	}
+	async findById(id: string): Promise<any | null> {
+		throw new Error("Method not implemented.");
+	}
+	async updateStatus(id: string, status: any): Promise<any> {
+		throw new Error("Method not implemented.");
 	}
 }
-
-const orderProtoPath = path.resolve(process.cwd(), "../proto/order.proto");
 
 function buildOrderRepository() {
 	if (process.env.USE_IN_MEMORY_DEMO === "true" || !process.env.DATABASE_URL) {
@@ -31,26 +36,10 @@ function buildOrderRepository() {
 
 async function start() {
 	const repo = buildOrderRepository();
-	const useCase = new GetOrderByUser(repo);
-	const controller = new OrderController(useCase);
 
-	const def = protoLoader.loadSync(orderProtoPath);
-	const proto = grpc.loadPackageDefinition(def) as any;
+	console.log("Order Service initializing layers...");
 
-	const server = new grpc.Server();
-
-	server.addService(proto.OrderService.service, {
-		GetOrdersByUser: controller.GetOrdersByUser,
-	});
-
-	server.bindAsync(
-		"0.0.0.0:50052",
-		grpc.ServerCredentials.createInsecure(),
-		() => {
-			console.log("Order Service running on 50052");
-			server.start();
-		},
-	);
+	// TODO: Initialize REST framework/Express here in future step
 }
 
 start();

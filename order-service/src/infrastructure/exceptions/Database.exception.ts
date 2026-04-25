@@ -2,14 +2,15 @@ import { status } from "@grpc/grpc-js";
 import { HTTP_STATUS } from "@shared/constants/http-status.constants";
 import { BaseException } from "@shared/exceptions/BaseException";
 
-export class OrderStateTransitionException extends BaseException {
+export class DatabaseException extends BaseException {
 	constructor(message: string) {
 		super(
 			message,
-			"ORDER_STATE_TRANSITION_ERROR",
-			HTTP_STATUS.PRECONDITION_FAILED,
-			status.FAILED_PRECONDITION,
+			"DATABASE_ERROR",
+			HTTP_STATUS.INTERNAL_SERVER_ERROR,
+			status.INTERNAL,
+			false,
 		);
-		Object.setPrototypeOf(this, OrderStateTransitionException.prototype);
+		Object.setPrototypeOf(this, DatabaseException.prototype);
 	}
 }

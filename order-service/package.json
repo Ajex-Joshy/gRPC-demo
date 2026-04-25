@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "tsx watch main.ts",
-		"build": "tsc -p tsconfig.json",
+		"build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
 		"start": "node dist/main.js",
 		"lint": "biome check .",
 		"format": "biome format .",
@@ -21,6 +21,7 @@
 		"@prisma/adapter-pg": "^7.7.0",
 		"@prisma/client": "^7.7.0",
 		"dotenv": "^17.4.2",
+		"inversify": "^8.1.0",
 		"pg": "^8.20.0",
 		"pino": "^10.3.1",
 		"pino-http": "^11.0.0",
@@ -30,6 +31,7 @@
 		"@biomejs/biome": "^2.4.13",
 		"@types/node": "^25.6.0",
 		"@types/pg": "^8.20.0",
+		"tsc-alias": "^1.8.16",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.3"
 	}

@@ -1,4 +1,4 @@
-import type { IOrderRepository } from "../../domain/repositories/order.repository";
+import type { IOrderRepository } from "@domain/repositories/order.repository";
 import type { OrderResponseDTO } from "../dto/order-response.dto";
 import { OrderMapper } from "../mappers/order.mapper";
 
