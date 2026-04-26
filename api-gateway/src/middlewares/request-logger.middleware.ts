@@ -1,7 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "@config/logger.js";
+import logger from "@config/logger.config";
 
-export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
-  logger.debug(`${req.method} ${req.url}`);
+export const requestLoggerMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const start = Date.now();
+  const correlationId = (req as any).correlationId;
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`, {
+      correlationId,
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      duration,
+    });
+  });
+
   next();
 };

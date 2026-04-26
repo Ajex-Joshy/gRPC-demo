@@ -26,12 +26,15 @@
     "helmet": "^8.1.0",
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
+    "opossum": "^9.0.0",
     "typescript": "^6.0.3",
+    "uuid": "^14.0.0",
     "winston": "^3.19.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "@types/opossum": "^8.1.9"
   }
 }

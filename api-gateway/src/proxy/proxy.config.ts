@@ -1,5 +1,5 @@
 import { ENV } from "@config/env.config.js";
-import { ServiceConfig } from "@shared/types/service-config.types.js";
+import { ServiceConfig } from "@custom-types/service-config.types";
 
 export const serviceConfigs: ServiceConfig[] = [
   {

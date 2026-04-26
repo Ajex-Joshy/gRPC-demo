@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { HTTP_STATUS } from "@shared/constants/http-status.constants.js";
+import { HTTP_STATUS } from "@utils/http-status";
 
 const router: Router = Router();
 

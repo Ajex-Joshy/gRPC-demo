@@ -1,6 +1,6 @@
-import { app } from "./app.js";
-import { ENV } from "@config/env.config.js";
-import logger from "@config/logger.js";
+import { app } from "./app";
+import { ENV } from "@config/env.config";
+import logger from "@config/logger.config";
 
 const startServer = () => {
   try {

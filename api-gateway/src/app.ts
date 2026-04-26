@@ -1,32 +1,37 @@
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { HTTP_STATUS } from "@shared/constants/http-status.constants.js";
-import { rateLimiter } from "@middlewares/rate-limiter.middleware.js";
-import { requestLogger } from "@middlewares/request-logger.middleware.js";
-import { errorHandler } from "@middlewares/error-handler.middleware.js";
-import { ProxyService } from "@proxy/proxy.service.js";
-import routes from "@routes/index.js";
-import logger from "@config/logger.js";
+import { HTTP_STATUS } from "@utils/http-status";
+import { rateLimiter } from "@middlewares/rate-limiter.middleware";
+import { requestLoggerMiddleware } from "@middlewares/request-logger.middleware";
+import { errorMiddleware } from "@middlewares/error.middleware";
+import { contextMiddleware } from "@middlewares/context.middleware";
+import routes from "@routes/index";
+import { ProxyService } from "@proxy/proxy.service";
+import logger from "@config/logger.config";
 
 const createApp = (): Application => {
   const app = express();
 
+  // Security headers
   app.use(helmet());
   app.use(cors());
+
+  // Context & Tracing
+  app.use(contextMiddleware);
 
   // Rate limiting
   app.use(rateLimiter);
 
   // Request logging
-  app.use(requestLogger);
+  app.use(requestLoggerMiddleware);
 
   app.use(express.json());
 
-  // Mount application routes (health checks, etc.)
+  // Application routes (Health checks, etc.)
   app.use(routes);
 
-  // Initialize Proxy Services
+  // Initialize Proxy Services (Downstream routes)
   ProxyService.setupProxy(app);
 
   // 404 handler
@@ -39,7 +44,7 @@ const createApp = (): Application => {
   });
 
   // Global Error Handler
-  app.use(errorHandler);
+  app.use(errorMiddleware);
 
   return app;
 };

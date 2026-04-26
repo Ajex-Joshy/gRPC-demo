@@ -4,9 +4,8 @@
     // File Layout
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    // For nodejs:
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     // "lib": ["esnext"],
     "types": ["node"],
     // and npm install -D @types/node
@@ -32,14 +31,14 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "baseUrl": "./",
-    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
     "paths": {
       "@proxy/*": ["src/proxy/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@routes/*": ["src/routes/*"],
-      "@shared/*": ["src/shared/*"],
-      "@config/*": ["src/config/*"]
+      "@custom-types/*": ["src/types/*"],
+      "@config/*": ["src/config/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
