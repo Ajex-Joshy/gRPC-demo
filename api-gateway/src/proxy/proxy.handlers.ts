@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage } from "http";
+import { fixRequestBody } from "http-proxy-middleware";
 import logger from "@config/logger.config";
 import { HTTP_STATUS } from "@utils/http-status";
 import { ProxyErrorResponse } from "@custom-types/proxy-error-response.types";
@@ -38,6 +38,10 @@ export class ProxyHandlers {
       proxyReq.setHeader(HEADERS.USER_ID, req.user.userId);
       proxyReq.setHeader(HEADERS.USER_ROLE, req.user.role);
     }
+
+    // Standard body forwarding
+    // Downstream services will only parse if the client sends the correct Content-Type header
+    fixRequestBody(proxyReq, req);
 
     logger.debug(`[Proxy] Forwarding to ${req.originalUrl}`, {
       userId: req.user?.userId,

@@ -22,12 +22,11 @@ const createApp = (): Application => {
   // Request logging
   app.use(requestLoggerMiddleware);
 
-  // Initialize Proxy Services BEFORE body parsing
-  // Proxied requests need the raw body stream — express.json() would consume it
-  ProxyService.setupProxy(app);
-
-  // Body parsing only for gateway's own routes (health, etc.)
+  // Body parsing 
   app.use(express.json());
+
+  // Initialize Proxy Services
+  ProxyService.setupProxy(app);
 
   // Application routes (Health checks, etc.)
   app.use(routes);
