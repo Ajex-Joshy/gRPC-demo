@@ -19,8 +19,8 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: 128530436595.dkr.ecr.ap-south-1.amazonaws.com/api-gateway:latest  
-        imagePullPolicy: IfNotPresent
+        image: ajexjoshy/api-gateway:latest  
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
