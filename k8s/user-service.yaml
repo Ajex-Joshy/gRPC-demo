@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: ajexjoshy/user-service:latest  
+        image: 128530436595.dkr.ecr.ap-south-1.amazonaws.com/user-service:latest  
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5001
