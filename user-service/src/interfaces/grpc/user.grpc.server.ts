@@ -16,12 +16,20 @@ const proto = grpc.loadPackageDefinition(
   packageDef,
 ) as unknown as ProtoGrpcType;
 
+import { tracingStorage } from "@shared/tracing/tracing-context";
+import { randomUUID } from "crypto";
+
 const controller = container.get<UserGrpcController>(TYPES.UserGrpcController);
 
 export const server = new grpc.Server();
 
 server.addService(proto.user.UserService.service, {
-  GetUser: controller.GetUser,
+  GetUser: (call: any, callback: any) => {
+    const correlationId = call.metadata.get("x-correlation-id")[0] || randomUUID();
+    tracingStorage.run({ correlationId }, () => {
+      controller.GetUser(call, callback);
+    });
+  },
 });
 
 export const startGrpcServer = async () => {

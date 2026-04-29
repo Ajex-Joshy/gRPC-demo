@@ -3,6 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import { HTTP_STATUS } from "@utils/http-status";
 import { rateLimiter } from "@middlewares/rate-limiter.middleware";
+import { correlationIdMiddleware } from "@middlewares/correlation-id.middleware";
 import { requestLoggerMiddleware } from "@middlewares/request-logger.middleware";
 import { errorMiddleware } from "@middlewares/error.middleware";
 import routes from "@routes/index";
@@ -15,6 +16,9 @@ const createApp = (): Application => {
   // Security headers
   app.use(helmet());
   app.use(cors());
+
+  // Correlation ID tracking
+  app.use(correlationIdMiddleware);
 
   // Rate limiting
   app.use(rateLimiter);

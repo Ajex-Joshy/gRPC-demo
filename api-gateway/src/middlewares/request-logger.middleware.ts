@@ -9,11 +9,13 @@ export const requestLoggerMiddleware = (
   const start = Date.now();
   res.on("finish", () => {
     const duration = Date.now() - start;
+    const correlationId = (req as any).correlationId;
     logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`, {
       method: req.method,
       url: req.originalUrl,
       status: res.statusCode,
       duration,
+      correlationId,
     });
   });
 

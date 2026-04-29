@@ -8,6 +8,7 @@ import {
   startGrpcServer,
 } from "@interfaces/grpc/user.grpc.server";
 import { errorHandler } from "@interfaces/http/middlewares/error-handler.middleware";
+import { tracingMiddleware } from "@interfaces/http/middlewares/tracing.middleware";
 import type { AuthRoutes } from "@interfaces/http/routes/auth.routes";
 import { httpLogger } from "@shared/logger/http.logger";
 import { logger } from "@shared/logger/logger";
@@ -22,6 +23,7 @@ async function bootstrap() {
   const app = express();
   app.use(helmet());
   // app.use(ExpressMongoSanitize({ replaceWith: "-" }));
+  app.use(tracingMiddleware);
   app.use(httpLogger);
   app.use(express.json());
 

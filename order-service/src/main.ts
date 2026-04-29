@@ -6,6 +6,7 @@ import { TYPES } from "@config/di/types";
 import { ENV } from "@config/env.config";
 import { OrderRoutes } from "@interfaces/http/routes/order.routes";
 import { errorHandler } from "@interfaces/http/middlewares/error-handler.middleware";
+import { tracingMiddleware } from "@interfaces/http/middlewares/tracing.middleware";
 import { httpLogger } from "@shared/logger/http.logger";
 import { logger } from "@shared/logger/logger";
 import { disconnectDB } from "@infrastructure/db/prisma/prisma.client";
@@ -14,6 +15,7 @@ async function bootstrap() {
   const app = express();
 
   app.use(helmet());
+  app.use(tracingMiddleware);
   app.use(httpLogger);
   app.use(express.json());
 

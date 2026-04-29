@@ -39,6 +39,12 @@ export class ProxyHandlers {
       proxyReq.setHeader(HEADERS.USER_ROLE, req.user.role);
     }
 
+    // Forward Correlation ID
+    const correlationId = (req as any).correlationId;
+    if (correlationId) {
+      proxyReq.setHeader("x-correlation-id", correlationId);
+    }
+
     // If we have a parsed body, ensure we forward it as JSON
     if (req.body && Object.keys(req.body).length > 0) {
       const bodyData = JSON.stringify(req.body);
