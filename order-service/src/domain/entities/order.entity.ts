@@ -33,10 +33,26 @@ export class Order {
 		}
 	}
 
+	private static readonly validTransitions: Record<OrderStatus, OrderStatus[]> = {
+		[OrderStatus.PENDING]: [OrderStatus.PROCESSING],
+		[OrderStatus.PROCESSING]: [OrderStatus.SHIPPED],
+		[OrderStatus.SHIPPED]: [OrderStatus.DELIVERED],
+		[OrderStatus.DELIVERED]: [],
+	};
+
 	updateStatus(newStatus: OrderStatus) {
-		if (this.status === OrderStatus.DELIVERED) {
+		if (this.status === newStatus) return;
+
+		const allowed = Order.validTransitions[this.status];
+
+		if (!allowed || !allowed.includes(newStatus)) {
 			throw new OrderStateTransitionException(
-				"Cannot update a delivered order",
+				`Invalid status transition from ${this.status} to ${newStatus}`,
+				{
+					currentStatus: this.status,
+					attemptedStatus: newStatus,
+					allowedTransitions: allowed,
+				},
 			);
 		}
 
