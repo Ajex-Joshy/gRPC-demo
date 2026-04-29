@@ -57,9 +57,16 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ap-south-1 --name grpc-cluster
 
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret generic grpc-project-secrets \
+            --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            --from-literal=MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Apply Kubernetes Manifests
         run: |
-          kubectl apply -f k8s/secrets.yaml
           kubectl apply -f k8s/configmap.yaml
           kubectl apply -f k8s/databases.yaml
           kubectl apply -f k8s/user-service.yaml
