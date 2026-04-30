@@ -13,7 +13,6 @@ import type { AuthRoutes } from "@interfaces/http/routes/auth.routes";
 import { httpLogger } from "@shared/logger/http.logger";
 import { logger } from "@shared/logger/logger";
 import express from "express";
-import ExpressMongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 
 async function bootstrap() {
